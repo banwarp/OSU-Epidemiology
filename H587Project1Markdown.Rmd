@@ -1,0 +1,64 @@
+---
+title: "H587 Project 1"
+author: "Peter Banwarth"
+date: "9/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Code
+```{r}
+
+library(readxl)
+library(table1)
+
+# read in data
+burn <- read_excel("BurnData.xlsx")
+
+# relabeling field values
+burn$newtrt <- factor(burn$newtrt,levels = c(0,1),
+                      labels = c("Standard Treatment","New Treatment"))
+
+burn$status <- factor(burn$status, levels = c(0,1),
+                      labels = c("Discharged without infection","Infection"))
+
+burn$female <-   factor(burn$female, levels=c(0,1),
+                        labels=c("Male","Female"))
+
+burn$white <- factor(burn$white,levels = c(0,1),
+                     labels = c("Does not identify as White","Identifies as White"))
+
+burn$burntype <- factor(burn$burntype,levels = c(1:4),
+                        labels <- c("Chemical","Scald","Electric","Flame"))
+
+units(burn$saburned) <- "percent"
+
+# labeling fields
+labels <- list(
+  variables=list(newtrt="Treatment",
+                 status="Status",
+                 female="Sex",
+                 white="Race",
+                 burntype = "Burn type",
+                 saburned = "Surface area burned (percent)")
+  )
+
+strata <- c(list(Total=burn),split(burn,burn$newtrt))
+```
+
+## Output
+```{r}
+table1(strata,labels)
+```
+
+
+### Resources used in this assignment:
+
+https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+
+https://bookdown.org/yihui/rmarkdown/basics.html
+
+https://rmarkdown.rstudio.com/lesson-9.html
